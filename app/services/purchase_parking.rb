@@ -1,18 +1,15 @@
 class PurchaseParking
-  def self.update_balance(user, price)
+  # You cannot use "params" outside of a Controller 
+  def self.update_balance(user_id, price, parking_id)
     pp'hello'
+    user = User.find_by!(id: user_id)
+    parking = Parking.find_by!(id: parking_id)
+    pp user.balance
     user.balance -= price
     user.save!
+    pp user.balance
     pp user
-    pp'user'
-  end
-  def self.update_spot_owner(user2, price2)
-    pp 'hello2'
-    p.user.balance -= price 
-    user.save!
-
-    pp user 
-    pp'user2'
+    pp'end'
   end
 end
 

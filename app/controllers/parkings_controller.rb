@@ -25,19 +25,28 @@ class ParkingsController < ApplicationController
         end
     end
 
-    def update 
+    # You SHOULD send back all the information that
+    # the react app needs to know whenever a request is
+    # successful
+    def update
         pp'purchase starting'
-        user = User.find_by!(params[:user_id])
-        price = params[:price].to_f
+        user = User.find_by!(id: params[:user_id])
+        # pp'user'
+        price = params[:price]
+        # pp'price'
+        parking_id = params[:id]
+        # pp'parking_id'
         pp price 
+        pp parking_id
+        pp'parking id above'
         pp user 
-        PurchaseParking.update_balance(user, price)
+        PurchaseParking.update_balance(user.id, price, parking_id)
 
         pp 'purchase done'
         spot = Parking.find_by!(id: params[:id])
-        spot.update!(occupied: params[:occupied])
+        spot.update!(occupied: params[:occupied], user_id: params[:id])
         if spot.valid?
-            render json: spot
+            render json: {spot: spot, user: user}
         else 
             render json: message.errors.full_messages, status: 422
         end
