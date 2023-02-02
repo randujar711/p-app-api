@@ -1,4 +1,6 @@
 class ParkingsController < ApplicationController
+    before_action: update_buyer, only: [:update, :index]
+
     def index 
         parking = Parking.all 
         render json: parking
@@ -29,18 +31,38 @@ class ParkingsController < ApplicationController
     # the react app needs to know whenever a request is
     # successful
     def update
+        pp'looking for seller'
+        seller = User.find_by!(id: params[:id])
+        pp seller
+        pp'looking for price'
+        # spot1 = Parking.find_by(id: params[:id])
+        # spot1.price 
+        # pp spot1
+        price1 = params[:price]
+        pp price1
+        PurchaseParking.update_seller_balance(seller.id, price1)
+
+        spot = Parking.find_by!(id: params[:id])
+        spot.update!(occupied: params[:occupied], user_id: params[:id])
+        if spot.valid?
+            render json: {spot: spot, seller: seller}
+        else 
+            render json: message.errors.full_messages, status: 422
+        end
+    end
+
+    private
+
+    def update_buyer 
         pp'purchase starting'
         user = User.find_by!(id: params[:user_id])
-        # pp'user'
         price = params[:price]
-        # pp'price'
         parking_id = params[:id]
-        # pp'parking_id'
         pp price 
         pp parking_id
         pp'parking id above'
         pp user 
-        PurchaseParking.update_balance(user.id, price, parking_id)
+        PurchaseParking.update_buyer_balance(user.id, price, parking_id)
 
         pp 'purchase done'
         spot = Parking.find_by!(id: params[:id])
