@@ -1,5 +1,5 @@
 class ParkingsController < ApplicationController
-    before_action: update_buyer, only: [:update, :index]
+    # after_action :update_buyer, only: [:update]z      z
 
     def index 
         parking = Parking.all 
@@ -32,18 +32,18 @@ class ParkingsController < ApplicationController
     # successful
     def update
         pp'looking for seller'
-        seller = User.find_by!(id: params[:id])
+        seller = User.find_by!(id: params[:user_id])
         pp seller
         pp'looking for price'
-        # spot1 = Parking.find_by(id: params[:id])
-        # spot1.price 
-        # pp spot1
-        price1 = params[:price]
-        pp price1
-        PurchaseParking.update_seller_balance(seller.id, price1)
-
+               
+        parkingp = Parking.find_by(id: params[:id])
+        price = parkingp.price
+        # price = params[:balance]
+        pp price
+        PurchaseParking.update_seller_balance(seller.id, price)
+    
         spot = Parking.find_by!(id: params[:id])
-        spot.update!(occupied: params[:occupied], user_id: params[:id])
+        spot.update!(occupied: params[:occupied])
         if spot.valid?
             render json: {spot: spot, seller: seller}
         else 
@@ -51,24 +51,23 @@ class ParkingsController < ApplicationController
         end
     end
 
-    private
+     
 
-    def update_buyer 
+    def update_buyer
         pp'purchase starting'
-        user = User.find_by!(id: params[:user_id])
-        price = params[:price]
+        user = params[:user_id]
+        # pp user
+        parkingp = Parking.find_by(id: params[:id])
+        price = parkingp.price
+        # pp price
         parking_id = params[:id]
-        pp price 
-        pp parking_id
-        pp'parking id above'
-        pp user 
-        PurchaseParking.update_buyer_balance(user.id, price, parking_id)
+        PurchaseParking.update_buyer_balance(user, price, parking_id)
 
         pp 'purchase done'
         spot = Parking.find_by!(id: params[:id])
-        spot.update!(occupied: params[:occupied], user_id: params[:id])
+        spot.update!(occupied: params[:occupied], user_id: params[:user_id])
         if spot.valid?
-            render json: {spot: spot, user: user}
+            # render json: {spot: spot, user: user}
         else 
             render json: message.errors.full_messages, status: 422
         end

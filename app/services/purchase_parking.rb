@@ -11,12 +11,20 @@ class PurchaseParking
     pp user
     pp'end buyer update'
   end
+
   def self.update_seller_balance(user_id, price)
     user = User.find_by!(id: user_id)
     pp user.balance
     pp'balance before'
-    user.balance += price
-    user.save!
+    balanceUp = user.balance + price
+    user.update!(balance: balanceUp)
+    
+    if user.valid?
+      user.save!
+    else 
+      render json: message.errors.full_messages, status: 422
+    end
+    
     pp user.balance
     pp'balance after'
 
