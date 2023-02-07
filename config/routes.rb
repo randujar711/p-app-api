@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   get '/parkings', to: 'parkings#index'
   get 'parkings/:id', to: 'parkings#show'
+  post '/parkings', to: 'parkings#create'
   patch '/parkings/:id', to: 'parkings#update'
   put 'parkings/:id', to: 'parkings#update_buyer'
 end

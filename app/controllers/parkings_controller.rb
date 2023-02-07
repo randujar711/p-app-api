@@ -15,7 +15,7 @@ class ParkingsController < ApplicationController
     end
 
     def create 
-       parking = Parking.create!(latitude: params[:latitude], longitude: params[:longitude], price: params[:price]) 
+       parking = Parking.create!(latitude: params[:latitude], longitude: params[:longitude], price: params[:price], date: params[:date], occupied: params[:occupied], user_id: params[:user_id]) 
         ActionCable.server.broadcast('live_feed', {
             post: parking
         })
