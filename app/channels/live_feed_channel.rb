@@ -1,7 +1,7 @@
 class LiveFeedChannel < ApplicationCable::Channel
   def subscribed
     # stream_from "some_channel"
-    stream from 'live_feed'
+    stream_from 'live_feed'
   end
 
   def unsubscribed
