@@ -31,6 +31,7 @@ class UsersController < ApplicationController
     def show
         # puts @current_user
         user = User.find_by!(id: params[:id])
+        pp user
         if @current_user.id == user.id
             render json: {user: user}, status: 200
         else 

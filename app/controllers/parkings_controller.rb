@@ -56,10 +56,10 @@ class ParkingsController < ApplicationController
     def update_buyer
         pp'purchase starting'
         user = params[:user_id]
-        # pp user
+        pp user
         parkingp = Parking.find_by(id: params[:id])
         price = parkingp.price
-        # pp price
+        pp price
         parking_id = params[:id]
         PurchaseParking.update_buyer_balance(user, price, parking_id)
 
@@ -67,7 +67,7 @@ class ParkingsController < ApplicationController
         spot = Parking.find_by!(id: params[:id])
         spot.update!(occupied: params[:occupied], user_id: params[:user_id])
         if spot.valid?
-            # render json: {spot: spot, user: user}
+            render json: {spot: spot, user: user}
         else 
             render json: message.errors.full_messages, status: 422
         end
