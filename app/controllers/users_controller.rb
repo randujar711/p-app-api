@@ -19,7 +19,7 @@ class UsersController < ApplicationController
         end
     end
     def create
-        user = User.new(email: params[:email], password: params[:password])
+        user = User.new(email: params[:email], password: params[:password], username: params[:username], balance: params[:balance])
         if user.save
             # create token here
             render json: {user: user, token: token}, status: 200 
