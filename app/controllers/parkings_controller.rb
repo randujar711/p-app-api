@@ -53,6 +53,7 @@ class ParkingsController < ApplicationController
 
     def update_buyer
         pp'purchase starting'
+        pp 'hello'
         user = params[:user_id]
         parkingp = Parking.find_by(id: params[:id])
         price = parkingp.price
