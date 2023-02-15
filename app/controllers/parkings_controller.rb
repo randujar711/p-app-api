@@ -1,6 +1,4 @@
 class ParkingsController < ApplicationController
-    # after_action :update_buyer, only: [:update]z      z
-
     def index 
         parking = Parking.all 
         render json: parking
@@ -56,18 +54,21 @@ class ParkingsController < ApplicationController
     def update_buyer
         pp'purchase starting'
         user = params[:user_id]
-        # pp user
         parkingp = Parking.find_by(id: params[:id])
         price = parkingp.price
-        # pp price
+        pp price
         parking_id = params[:id]
         PurchaseParking.update_buyer_balance(user, price, parking_id)
-
+        userProf = User.find_by!(id: user)
+        pp'below'
+        pp userProf
         pp 'purchase done'
         spot = Parking.find_by!(id: params[:id])
         spot.update!(occupied: params[:occupied], user_id: params[:user_id])
+        
         if spot.valid?
-            # render json: {spot: spot, user: user}
+            ActionCable.server.broadcast('live_feed', {spot: spot, user: userProf})
+            render json: {spot: spot, user: user}
         else 
             render json: message.errors.full_messages, status: 422
         end
