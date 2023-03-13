@@ -36,7 +36,6 @@ class ParkingsController < ApplicationController
                
         parkingp = Parking.find_by(id: params[:id])
         price = parkingp.price
-        # price = params[:balance]
         pp price
         PurchaseParking.update_seller_balance(seller.id, price)
     
